@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function Recipes() {
   const [recipes, setRecipes] = useState([]);
   const [errorMessage, setErrorMessage] = useState(``);
 
-  useEffect(async () => {
-    const response = await fetch("/api/recipes");
-
-    if (response.ok) {
-      const responseRecipes = await response.json();
-      setRecipes(responseRecipes.recipes);
-      setErrorMessage(``)
-    } else {
-      setErrorMessage(`Failed to fetch recipes!`);
-    }
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const response = await axios.get("/api/recipes");
+        setRecipes(response.data.recipes);
+      } catch (error) {
+        setErrorMessage(`Failed to fetch recipes!`);
+      }
+    };
+    fetchRecipes();
   }, []);
 
   return (
